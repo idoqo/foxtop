@@ -108,6 +108,10 @@ func (ds *DomainStore) AppendURL(url MozUrl) {
 	}
 }
 
+func (ds *DomainStore) SortedDomains() []*Domain {
+	return ds.hosts
+}
+
 func (ds DomainStore) Len() int {
 	return len(ds.hosts)
 }

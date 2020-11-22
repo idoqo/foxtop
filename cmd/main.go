@@ -2,16 +2,15 @@ package main
 
 import (
 	"fmt"
+	"sort"
 
 	"gitlab.com/idoko/foxtop/mozurl"
 )
 
 func main() {
 	raw := map[string]int{
-		"https://t.co/lorem":              4,
-		"https://twitter.com/rxrog/":      2,
-		"https://twitter.com/theshalvah/": 1,
-		"https://mchl.xyz":                3,
+		"https://t.co/lorem":         45,
+		"https://twitter.com/rxrog/": 16,
 	}
 	mozUrls := []mozurl.MozUrl{}
 	for u, c := range raw {
@@ -22,8 +21,8 @@ func main() {
 	store := mozurl.NewDomainStore()
 	store.PackFromURLs(mozUrls)
 
-	/*store.Sort()*/
-	for _, domain := range store.Domains {
+	sort.Sort(store)
+	for _, domain := range store.SortedDomains() {
 		fmt.Println(domain.Host())
 	}
 }
