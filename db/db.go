@@ -50,6 +50,26 @@ func (db Database) AllHosts() (mozurl.MozHostStore, error) {
 	return store, nil
 }
 
+func (db Database) URLsForHost(host *mozurl.MozHost) error {
+	revhost := reverseHost(host.HostName())
+	query := `SELECT visit_count, url FROM moz_places WHERE rev_host = $1 ORDER BY visit_count`
+	rows, err := db.Conn.Query(query, revhost)
+	if err != nil {
+		return err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var visitCount int
+		var url string
+		if err := rows.Scan(&visitCount, &url); err != nil {
+			return err
+		}
+		// we assume that the host already knows the visit count, so we go ahead to add the raw url alone
+		host.AddRawURL(url)
+	}
+	return nil
+}
+
 func normalizeHost(revHost string) string {
 	// strip the trailing full stop first
 	n := len(revHost)
@@ -62,4 +82,17 @@ func normalizeHost(revHost string) string {
 	}
 	return string(runes[n:])
 
+}
+
+// this is sort of the inverse of `normalizeHost`, used when we want to select URLs
+// from the moz_places table
+func reverseHost(host string) string {
+	n := len(host)
+	runes := make([]rune, n)
+	for _, rune := range host {
+		n--
+		runes[n] = rune
+	}
+	str := string(runes[n:]) + "."
+	return str
 }

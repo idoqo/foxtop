@@ -17,3 +17,12 @@ func NewMozHost(host string, visitCount int) *MozHost {
 		visitCount: visitCount,
 	}
 }
+
+func (h *MozHost) URLs() []MozURL {
+	return h.urls
+}
+
+func (h *MozHost) AddRawURL(rawurl string) {
+	url := NewMozURL(rawurl, 0)
+	h.urls = append(h.urls, url)
+}
