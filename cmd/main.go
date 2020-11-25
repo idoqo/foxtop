@@ -3,53 +3,56 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
 
-	ui "github.com/gizak/termui/v3"
-	"github.com/gizak/termui/v3/widgets"
-	"gitlab.com/idoko/foxtop/db"
+	flag "github.com/spf13/pflag"
+	"gitlab.com/idoko/foxtop"
 )
 
 func main() {
+	var dbFile string
+	var err error
+	var profileDir string
 
-	dbFile := "tmp.sqlite"
-	db, err := db.Connect(dbFile)
-	if err != nil {
-		log.Fatal(err)
-	}
-	store, err := db.AllHosts()
-	if err != nil {
-		log.Fatal(err)
-	}
+	flag.StringVarP(&profileDir, "profile-path", "p", "", "firefox profile path")
+	flag.Parse()
 
-	hosts := []string{}
-	for _, host := range store.Hosts() {
-		host := fmt.Sprintf("%-10d %-15s", host.VisitCount(), host.HostName())
-		hosts = append(hosts, host)
-	}
-
-	if err := ui.Init(); err != nil {
-		log.Fatalf("failed to set up UI: %v", err)
-	}
-	defer ui.Close()
-	list := widgets.NewList()
-	list.Title = "Hosts"
-	list.Rows = hosts
-	list.TextStyle = ui.NewStyle(ui.ColorYellow)
-	list.WrapText = false
-	list.SetRect(0, 0, 100, 100)
-	ui.Render(list)
-
-	uiEvents := ui.PollEvents()
-	for {
-		e := <-uiEvents
-		switch e.ID {
-		case "q", "<C-c":
-			return
-		case "j", "<Down>":
-			list.ScrollDown()
-		case "k", "<Up>":
-			list.ScrollUp()
+	if profileDir == "" {
+		if profileDir, err = defaultProfileDir(); err != nil {
+			log.Fatal(err)
 		}
-		ui.Render(list)
 	}
+	dbFile, err = getDbFile(profileDir)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println(dbFile)
+}
+
+func getDbFile(profileDir string) (string, error) {
+	dbFile := profileDir + "/places.sqlite"
+	info, err := os.Stat(dbFile)
+	if os.IsNotExist(err) || info.IsDir() {
+		return "", fmt.Errorf("could not find %q or it's a directory", dbFile)
+	}
+	return dbFile, nil
+}
+
+func defaultProfileDir() (string, error) {
+	home, err := os.UserHomeDir()
+	if err != nil {
+		return "", err
+	}
+	firefoxPath := home + "/.mozilla/firefox"
+
+	pfConfig, err := os.Open(firefoxPath + "/profiles.ini")
+	if err != nil {
+		return "", err
+	}
+	cfg, err := foxtop.LoadConfig(pfConfig)
+	if err != nil {
+		return "", err
+	}
+	return cfg.DefaultPath(), nil
 }

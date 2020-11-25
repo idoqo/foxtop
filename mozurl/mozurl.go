@@ -34,3 +34,13 @@ func (mu MozURL) extractHost() string {
 func parsePlacesUrl(place string) string {
 	return "place" + ":" + strings.Split(place, "=")[0]
 }
+
+func (mu MozURL) GetProtocol() string {
+	u, _ := url.Parse(mu.rawurl)
+	switch u.Scheme {
+	case "https", "http", "ftp", "file":
+		return u.Scheme
+	default:
+		return ""
+	}
+}

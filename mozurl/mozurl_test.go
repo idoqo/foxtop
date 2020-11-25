@@ -29,3 +29,26 @@ func TestMozURL(t *testing.T) {
 		}
 	})
 }
+
+func TestGetProtocol(t *testing.T) {
+	cases := []struct {
+		url      string
+		protocol string
+	}{
+		{"https://t.co/lorem", "https"},
+		{"ftp://ftp.intel.com.br", "ftp"},
+		{"localhost:8000", ""},
+		{"place:parent=menu", ""},
+		{"about:config", ""},
+		{"file://hello-world.txt", "file"},
+		{"javascript:void();", ""},
+	}
+
+	for _, c := range cases {
+		mu := NewMozURL(c.url, 0)
+		got := mu.GetProtocol()
+		if got != c.protocol {
+			t.Errorf("expected protocol for %q to be %q, got %q", c.url, c.protocol, got)
+		}
+	}
+}
