@@ -11,6 +11,10 @@ func (mh *MozHost) HostName() string {
 	return mh.host
 }
 
+func (mh *MozHost) VisitCount() int {
+	return mh.visitCount
+}
+
 func NewMozHost(host string, visitCount int) *MozHost {
 	return &MozHost{
 		host:       host,
