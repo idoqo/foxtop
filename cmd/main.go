@@ -7,6 +7,8 @@ import (
 
 	flag "github.com/spf13/pflag"
 	"gitlab.com/idoko/foxtop"
+	"gitlab.com/idoko/foxtop/cmd/views"
+	"gitlab.com/idoko/foxtop/db"
 )
 
 func main() {
@@ -23,6 +25,14 @@ func main() {
 		}
 	}
 	dbFile, err = getDbFile(profileDir)
+	if err != nil {
+		log.Fatal(err)
+	}
+	db, err := db.Connect(dbFile)
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = views.Run(db)
 	if err != nil {
 		log.Fatal(err)
 	}
