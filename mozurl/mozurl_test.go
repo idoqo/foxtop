@@ -5,7 +5,7 @@ import (
 )
 
 func TestMozURL(t *testing.T) {
-	t.Run("correctly extracts host from domain", func(t *testing.T) {
+	t.Run("correctly extracts Host from domain", func(t *testing.T) {
 		cases := []struct {
 			rawurl     string
 			visitCount int
@@ -24,7 +24,7 @@ func TestMozURL(t *testing.T) {
 			}
 			got := mu.extractHost()
 			if got != c.host {
-				t.Errorf("expected host for %q to be %q, got %q", c.rawurl, c.host, got)
+				t.Errorf("expected Host for %q to be %q, got %q", c.rawurl, c.host, got)
 			}
 		}
 	})

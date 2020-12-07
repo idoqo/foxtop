@@ -1,19 +1,19 @@
 package mozurl
 
 type MozHostStore struct {
-	mozhosts []*MozHost
+	MozHosts []*MozHost `json:"hosts"`
 }
 
 func NewMozHostStore() *MozHostStore {
 	return &MozHostStore{
-		mozhosts: []*MozHost{},
+		MozHosts: []*MozHost{},
 	}
 }
 
 func (hs *MozHostStore) AddHost(host *MozHost) {
-	hs.mozhosts = append(hs.mozhosts, host)
+	hs.MozHosts = append(hs.MozHosts, host)
 }
 
 func (hs *MozHostStore) Hosts() []*MozHost {
-	return hs.mozhosts
+	return hs.MozHosts
 }

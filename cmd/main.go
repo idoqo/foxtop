@@ -6,7 +6,7 @@ import (
 	"os"
 
 	flag "github.com/spf13/pflag"
-	"gitlab.com/idoko/foxtop"
+	"gitlab.com/idoko/foxtop/cmd/config"
 	"gitlab.com/idoko/foxtop/cmd/views"
 	"gitlab.com/idoko/foxtop/db"
 )
@@ -60,7 +60,7 @@ func defaultProfileDir() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	cfg, err := foxtop.LoadConfig(pfConfig)
+	cfg, err := config.LoadConfig(pfConfig)
 	if err != nil {
 		return "", err
 	}

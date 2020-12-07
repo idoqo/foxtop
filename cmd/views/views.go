@@ -21,7 +21,7 @@ func Run(db db.Database) error {
 
 	hosts := []string{}
 	for _, host := range store.Hosts() {
-		h := fmt.Sprintf("%-10d %-15s", host.VisitCount(), host.HostName())
+		h := fmt.Sprintf("%-10d %-15s", host.VisitCount, host.HostName())
 		hosts = append(hosts, h)
 	}
 

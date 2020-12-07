@@ -1,4 +1,4 @@
-package foxtop
+package config
 
 import (
 	"io"

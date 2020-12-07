@@ -12,6 +12,6 @@ func TestAppendHost(t *testing.T) {
 	want := 1
 	got := len(store.Hosts())
 	if got != 1 {
-		t.Errorf("expected host count in store to be %d after adding host, got %d", want, got)
+		t.Errorf("expected Host count in store to be %d after adding Host, got %d", want, got)
 	}
 }

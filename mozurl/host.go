@@ -1,32 +1,24 @@
 package mozurl
 
-// Type MozHost wraps all URLs that share the same host
+// Type MozHost wraps all URLs that share the same Host
 type MozHost struct {
-	host       string
-	urls       []MozURL
-	visitCount int
+	Host       string   `json:"Host"`
+	URLs       []MozURL `json:"URLs"`
+	VisitCount int      `json:"visit_count"`
 }
 
 func (mh *MozHost) HostName() string {
-	return mh.host
-}
-
-func (mh *MozHost) VisitCount() int {
-	return mh.visitCount
+	return mh.Host
 }
 
 func NewMozHost(host string, visitCount int) *MozHost {
 	return &MozHost{
-		host:       host,
-		visitCount: visitCount,
+		Host:       host,
+		VisitCount: visitCount,
 	}
-}
-
-func (h *MozHost) URLs() []MozURL {
-	return h.urls
 }
 
 func (h *MozHost) AddRawURL(rawurl string) {
 	url := NewMozURL(rawurl, 0)
-	h.urls = append(h.urls, url)
+	h.URLs = append(h.URLs, url)
 }

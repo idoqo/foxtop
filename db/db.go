@@ -24,7 +24,7 @@ func Connect(dbfile string) (Database, error) {
 
 func (db Database) AllHosts() (mozurl.MozHostStore, error) {
 	store := mozurl.MozHostStore{}
-	query := `SELECT SUM(visit_count) as host_visit_count, rev_host as mozhost FROM moz_places GROUP BY rev_host ORDER BY host_visit_count DESC LIMIT 10`
+	query := `SELECT SUM(visit_count) as host_visit_count, rev_host as mozhost FROM moz_places GROUP BY rev_host ORDER BY host_visit_count DESC`
 	rows, err := db.Conn.Query(query)
 	if err != nil {
 		return store, err

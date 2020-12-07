@@ -9,15 +9,15 @@ func TestAddRawURL(t *testing.T) {
 	h.AddRawURL(url)
 
 	wantedLen := 1
-	gotLen := len(h.URLs())
+	gotLen := len(h.URLs)
 
 	if gotLen != wantedLen {
 		t.Errorf("expected number of URLs after adding new URL to be %d, got %d", wantedLen, gotLen)
 	}
 
 	wantedVisits := 0 // AddRawURL should not affect the visit count
-	gotVisits := h.visitCount
+	gotVisits := h.VisitCount
 	if gotVisits != wantedVisits {
-		t.Errorf("expected visit count of host after adding new url to be %d, got %d", wantedVisits, gotVisits)
+		t.Errorf("expected visit count of Host after adding new url to be %d, got %d", wantedVisits, gotVisits)
 	}
 }
