@@ -3,7 +3,7 @@ package mozurl
 // Type MozHost wraps all URLs that share the same Host
 type MozHost struct {
 	Host       string   `json:"Host"`
-	URLs       []MozURL `json:"URLs"`
+	URLs       []MozURL `json:"urls"`
 	VisitCount int      `json:"visit_count"`
 }
 
@@ -18,7 +18,8 @@ func NewMozHost(host string, visitCount int) *MozHost {
 	}
 }
 
-func (h *MozHost) AddRawURL(rawurl string) {
-	url := NewMozURL(rawurl, 0)
+func (h *MozHost) AddRawURL(rawurl string, visitCount int) {
+	h.VisitCount += visitCount
+	url := NewMozURL(rawurl, visitCount)
 	h.URLs = append(h.URLs, url)
 }

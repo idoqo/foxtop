@@ -3,6 +3,7 @@ package api
 import (
 	"github.com/gin-gonic/gin"
 	"gitlab.com/idoko/foxtop/db"
+	"gitlab.com/idoko/foxtop/mozurl"
 	"log"
 	"net/http"
 )
@@ -19,12 +20,23 @@ func InitRouter(db db.Database) *gin.Engine {
 		if err != nil {
 			log.Println(err)
 			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+		} else {
+			c.JSON(http.StatusOK, hosts)
 		}
-		c.JSON(http.StatusOK, hosts)
 	})
+
 	r.GET("/hosts/:host", func(c *gin.Context) {
-		c.JSON(http.StatusMethodNotAllowed, gin.H{"message": "not implemented"})
+		hostname := c.Param("host")
+		host := &mozurl.MozHost{Host: hostname}
+		err := db.URLsForHost(host)
+		if err != nil {
+			log.Println(err)
+			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+		} else {
+			c.JSON(http.StatusOK, gin.H{"host": host})
+		}
 	})
+
 	r.GET("/protocols", func(c *gin.Context) {
 		c.JSON(http.StatusMethodNotAllowed, gin.H{"message": "not implemented"})
 	})

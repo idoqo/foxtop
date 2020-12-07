@@ -19,7 +19,7 @@ func TestMozURL(t *testing.T) {
 		}
 		for _, c := range cases {
 			mu := NewMozURL(c.rawurl, c.visitCount)
-			if mu.rawurl != c.rawurl || mu.visitCount != c.visitCount {
+			if mu.RawUrl != c.rawurl || mu.visitCount != c.visitCount {
 				t.Fatalf("failed to make MozUrl: Expected %v, got %v", c, mu)
 			}
 			got := mu.extractHost()

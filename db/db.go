@@ -52,7 +52,7 @@ func (db Database) AllHosts() (mozurl.MozHostStore, error) {
 
 func (db Database) URLsForHost(host *mozurl.MozHost) error {
 	revhost := reverseHost(host.HostName())
-	query := `SELECT visit_count, url FROM moz_places WHERE rev_host = $1 ORDER BY visit_count`
+	query := `SELECT visit_count, url FROM moz_places WHERE rev_host = $1 ORDER BY visit_count DESC`
 	rows, err := db.Conn.Query(query, revhost)
 	if err != nil {
 		return err
@@ -65,7 +65,7 @@ func (db Database) URLsForHost(host *mozurl.MozHost) error {
 			return err
 		}
 		// we assume that the host already knows the visit count, so we go ahead to add the raw url alone
-		host.AddRawURL(url)
+		host.AddRawURL(url, visitCount)
 	}
 	return nil
 }
